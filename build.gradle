@@ -1,0 +1,48 @@
+plugins {
+    id 'java'
+    id 'application'
+}
+
+group = 'ptit.ltm'
+version = '1.0-SNAPSHOT'
+
+// Cấu hình kho thư viện tải MySQL Connector
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // Thư viện kết nối CSDL MySQL (JDBC Driver)
+    implementation 'com.mysql:mysql-connector-j:8.3.0'
+}
+
+// Cấu hình phiên bản Java (Java 17)
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+
+// Đảm bảo biên dịch hỗ trợ tiếng Việt có dấu (UTF-8)
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+}
+
+// Cấu hình task chạy Server qua Gradle: gradle runServer
+tasks.register('runServer', JavaExec) {
+    group = 'application'
+    description = 'Khởi chạy RMI Server'
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'server.ServerMain'
+    jvmArgs = ['-Dfile.encoding=UTF-8']
+}
+
+// Cấu hình task chạy Client qua Gradle: gradle runClient
+tasks.register('runClient', JavaExec) {
+    group = 'application'
+    description = 'Khởi chạy RMI Client'
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'client.ClientMain'
+    jvmArgs = ['-Dfile.encoding=UTF-8']
+}
+
